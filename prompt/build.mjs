@@ -2,8 +2,9 @@
 //
 // 用法：node prompt/build.mjs
 // 产出：
-//   prompt/system_prompt.md       完整版：SKILL + 两个模式 + 全部 references
-//   prompt/system_prompt_lite.md  精简版：SKILL + 两个模式 + 高频速查 + 军师手册 + 表达DNA（上下文紧的模型用）
+//   prompt/system_prompt.md       完整版：SKILL + 两个模式 + 全部 references（给自有后端）
+//   prompt/xuyueteng-prompt.js    眼镜工程 import 的模块：LITE = lite.md，CORE = core.md
+//   prompt/system_prompt_lite.md  精简版：手写的 skill/xuyueteng-glasses/lite.md（约 5.6 千字），眼镜内置模型首选
 // Skill 改了之后重跑一遍再提交。
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -19,14 +20,12 @@ const NOTE = '> 以下"见 `references/…`""见 `modes/…`"指的就是本文�
 const core = [stripFrontmatter(read('SKILL.md')), NOTE, read('modes/photo.md'), read('modes/listen.md')];
 const section = (rel) => `# 参考：${rel}\n\n${read(rel)}`;
 
-const lite = [
+// 完整版：SKILL + 两个模式 + 全部 references，给自有后端（上下文大）用
+const full = [
   ...core,
   section('references/高频速查.md'),
   section('references/军师手册.md'),
   section('references/表达DNA.md'),
-];
-const full = [
-  ...lite,
   section('references/招式表.md'),
   section('references/战例库.md'),
   section('references/knowledge/02_女生分类与识别.md'),
@@ -38,21 +37,23 @@ const full = [
   section('references/术语表.md'),
 ];
 
+// 精简版 lite.md、核心版 core.md 都是手写的：只留帮兄弟回话用得上的判断和打法，不是文件拼接。
+const liteText = read('lite.md');
+const coreText = read('core.md');
+
 const header = '<!-- 由 prompt/build.mjs 从 skill/xuyueteng-glasses 生成，不要手改。 -->\n\n';
-for (const [name, parts] of [['system_prompt_lite.md', lite], ['system_prompt.md', full]]) {
-  const text = header + parts.join('\n\n---\n\n') + '\n';
-  writeFileSync(join(root, 'prompt', name), text);
-  console.log(`${name}: ${text.length} 字符`);
+for (const [name, text] of [['system_prompt_lite.md', liteText], ['system_prompt.md', full.join('\n\n---\n\n')]]) {
+  const out = `${header}${text}\n`;
+  writeFileSync(join(root, 'prompt', name), out);
+  console.log(`${name}: ${out.length} 字符`);
 }
 
-// 眼镜智能体直接 import 的 JS 模块：LITE 是首选；内置模型吃不下时退到 CORE。
-// CORE 是手写的 core.md：只留帮兄弟回话的判断和打法，不是 SKILL.md 的摘要。
-const coreText = read('core.md');
+// 眼镜智能体直接 import 的 JS 模块：LITE 首选；内置模型吃不下时退到 CORE。
 const js = [
   '// 由 prompt/build.mjs 从 skill/xuyueteng-glasses 生成，不要手改。复制到眼镜工程的 lib/ 下 import。',
-  `export const XUYUETENG_PROMPT_LITE = ${JSON.stringify(lite.join('\n\n---\n\n'))};`,
+  `export const XUYUETENG_PROMPT_LITE = ${JSON.stringify(liteText)};`,
   `export const XUYUETENG_PROMPT_CORE = ${JSON.stringify(coreText)};`,
   '',
 ].join('\n');
 writeFileSync(join(root, 'prompt', 'xuyueteng-prompt.js'), js);
-console.log(`xuyueteng-prompt.js: lite ${lite.join('').length} / core ${coreText.length} 字符`);
+console.log(`xuyueteng-prompt.js: lite ${liteText.length} / core ${coreText.length} 字符`);

@@ -19,20 +19,23 @@
 AGENTS.md                         给 Rokid AIUI 开发 Agent 的说明：页面、怎么调模型、怎么显示
 skill/xuyueteng-glasses/
 ├── SKILL.md                      入口：身份、口吻、初始亲密度、硬规则、诊断内核、输出格式、边界
-├── core.md                       手写精简版：只留回话用的判断和打法（约 2.2 千字），内置模型吃不下完整提示词时用
+├── lite.md                       精简版（手写，约 5.6 千字）：只留帮用户回话的判断和打法，线上聊天 + 线下约会都在
+├── core.md                       核心版（手写，约 2.5 千字）：lite 再压一遍，内置模型吃不下 lite 时用
 ├── modes/photo.md                看照片
 ├── modes/listen.md               听她说
 └── references/                   军师手册、招式表、战例库、高频速查、knowledge/02~05、聊天案例……
 prompt/
 ├── build.mjs                     把 Skill 拼成单文件提示词
-├── system_prompt_lite.md         精简版（约 2.3 万字）
-├── xuyueteng-prompt.js           眼镜工程直接 import 的 JS 模块（LITE + CORE 两档）
+├── system_prompt_lite.md         = lite.md
+├── xuyueteng-prompt.js           眼镜工程直接 import 的 JS 模块（LITE = lite.md，CORE = core.md）
 └── system_prompt.md              完整版（约 9.2 万字）
 ```
 
 ## 怎么用
 
-**在 Rokid AIUI Studio 里做眼镜智能体**：让 AIUI CODING 先读 `AGENTS.md`，照着做。系统提示词用 `prompt/system_prompt_lite.md`。
+**在 Rokid AIUI Studio 里做眼镜智能体**：让 AIUI CODING 先读 `AGENTS.md`，照着做。系统提示词用 `prompt/xuyueteng-prompt.js` 里的 `XUYUETENG_PROMPT_LITE`。
+
+**语音模式默认就是线下约会**：她坐在对面、第一次见；照片模式默认线上刚加上。两种都从"刚认识"开始。
 
 **在别的 Agent 里当 Skill 用**（Claude Code 等）：
 

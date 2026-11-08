@@ -16,11 +16,11 @@
 
 ## 调大模型
 
-- **系统提示词**：眼镜运行时读不了仓库文件，把 `prompt/xuyueteng-prompt.js` 复制到工程 `lib/` 下 import：`XUYUETENG_PROMPT_LITE`（约 2.2 万字，首选），`LanguageModel.create()` 失败就退到 `XUYUETENG_PROMPT_CORE`（约 2.2 千字，`skill/xuyueteng-glasses/core.md`：只留回话用的判断和打法）。走自有后端时可以用 `prompt/system_prompt.md`（约 9.2 万字，带全部战例和知识）。原样作为 system 消息，不要删改。
+- **系统提示词**：眼镜运行时读不了仓库文件，把 `prompt/xuyueteng-prompt.js` 复制到工程 `lib/` 下 import：`XUYUETENG_PROMPT_LITE`（`skill/xuyueteng-glasses/lite.md`，约 5.6 千字，首选），`LanguageModel.create()` 失败就退到 `XUYUETENG_PROMPT_CORE`（`skill/xuyueteng-glasses/core.md`，约 2.5 千字）。两份都是手写的，只留帮用户回话的判断和打法。走自有后端时可以用 `prompt/system_prompt.md`（约 9.2 万字，带全部战例和知识）。原样作为 system 消息，不要删改。
 - **会话**：建一次带系统提示词的基础会话，每轮 `clone()` 一份来问，问完 `destroy()`；上下文由我们自己按最近几句传，不让会话历史越堆越长。
 - **用户消息**：
   - 看照片：多模态模型直接给图片；或者先 OCR，再发 `image_text: <识别出的文字>`。
-  - 听她说：`transcript:\n<一句一行>`。
+  - 听她说：`scene: 线下约会，当面聊\ntranscript:\n<一句一行>`。**语音模式默认就是线下约会、第一次见面。**
   - 两种都在前面加上档案：`girl_profile: {"type":"…","stage":"…"}`，**第一次没有档案就不加，模型会按"刚认识"处理**。
 - **输出**：模型只回一个 JSON（字段见 `skill/xuyueteng-glasses/SKILL.md`「输出格式」）。取第一个 `{` 到最后一个 `}` 解析；解析失败就显示"没看明白，再来一次"。
 
