@@ -16,7 +16,8 @@
 
 ## 调大模型
 
-- **系统提示词**：`prompt/system_prompt_lite.md`（约 2.3 万字）。模型上下文够大就用 `prompt/system_prompt.md`（约 9.2 万字，带全部战例和知识）。原样作为 system 消息，不要删改。
+- **系统提示词**：眼镜运行时读不了仓库文件，把 `prompt/xuyueteng-prompt.js` 复制到工程 `lib/` 下 import：`XUYUETENG_PROMPT_LITE`（约 2.2 万字，首选），`LanguageModel.create()` 失败就退到 `XUYUETENG_PROMPT_CORE`（约 7.7 千字，只有 SKILL + 两个模式）。走自有后端时可以用 `prompt/system_prompt.md`（约 9.2 万字，带全部战例和知识）。原样作为 system 消息，不要删改。
+- **会话**：建一次带系统提示词的基础会话，每轮 `clone()` 一份来问，问完 `destroy()`；上下文由我们自己按最近几句传，不让会话历史越堆越长。
 - **用户消息**：
   - 看照片：多模态模型直接给图片；或者先 OCR，再发 `image_text: <识别出的文字>`。
   - 听她说：`transcript:\n<一句一行>`。

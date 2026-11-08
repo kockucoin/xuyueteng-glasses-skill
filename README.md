@@ -25,6 +25,7 @@ skill/xuyueteng-glasses/
 prompt/
 ├── build.mjs                     把 Skill 拼成单文件提示词
 ├── system_prompt_lite.md         精简版（约 2.3 万字）
+├── xuyueteng-prompt.js           眼镜工程直接 import 的 JS 模块（LITE + CORE 两档）
 └── system_prompt.md              完整版（约 9.2 万字）
 ```
 

@@ -44,3 +44,13 @@ for (const [name, parts] of [['system_prompt_lite.md', lite], ['system_prompt.md
   writeFileSync(join(root, 'prompt', name), text);
   console.log(`${name}: ${text.length} 字符`);
 }
+
+// 眼镜智能体直接 import 的 JS 模块：LITE 是首选；内置模型吃不下时退到 CORE（只有 SKILL + 两个模式）。
+const js = [
+  '// 由 prompt/build.mjs 从 skill/xuyueteng-glasses 生成，不要手改。复制到眼镜工程的 lib/ 下 import。',
+  `export const XUYUETENG_PROMPT_LITE = ${JSON.stringify(lite.join('\n\n---\n\n'))};`,
+  `export const XUYUETENG_PROMPT_CORE = ${JSON.stringify(core.join('\n\n---\n\n'))};`,
+  '',
+].join('\n');
+writeFileSync(join(root, 'prompt', 'xuyueteng-prompt.js'), js);
+console.log(`xuyueteng-prompt.js: lite ${lite.join('').length} / core ${core.join('').length} 字符`);
