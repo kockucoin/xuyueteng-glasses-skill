@@ -19,6 +19,7 @@
 AGENTS.md                         给 Rokid AIUI 开发 Agent 的说明：页面、怎么调模型、怎么显示
 skill/xuyueteng-glasses/
 ├── SKILL.md                      入口：身份、口吻、初始亲密度、硬规则、诊断内核、输出格式、边界
+├── core.md                       手写精简版：只留回话用的判断和打法（约 2.2 千字），内置模型吃不下完整提示词时用
 ├── modes/photo.md                看照片
 ├── modes/listen.md               听她说
 └── references/                   军师手册、招式表、战例库、高频速查、knowledge/02~05、聊天案例……
